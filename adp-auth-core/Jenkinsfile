@@ -1,0 +1,33 @@
+pipeline {
+    agent any
+
+    stages {
+        stage("Hello") {
+            steps {
+                echo "Hello World"
+            }
+        }
+        stage("git pull") {
+            steps {
+                echo "本次构建选择的分支是：${branch}"
+                checkout([$class: "GitSCM", branches: [[name: "${branch}"]], extensions: [], userRemoteConfigs: [[credentialsId: "e2804a17-90fa-4c8c-8f30-5985b4e5bb4c", url: "http://192.168.0.110:8088/adp/adp-auth-core.git"]]])
+            }
+        }
+        stage("maven build") {
+            steps {
+                sh "mvn clean install -Dmaven.test.skip=true"
+            }
+        }
+    }
+    post {
+        cleanup {
+            deleteDir()
+            dir("${workspace}@tmp") {
+                deleteDir()
+            }
+            dir("${workspace}@script") {
+                deleteDir()
+            }
+        }
+    }
+}
