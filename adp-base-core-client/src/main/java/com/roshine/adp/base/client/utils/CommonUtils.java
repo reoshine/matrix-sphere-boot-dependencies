@@ -22,8 +22,8 @@ import java.util.UUID;
  * @date 2020-10-13 21:33
  * @Description 应用统一工具类
  */
-public class AdpCommonUtils {
-    private static final Logger logger = LoggerFactory.getLogger(AdpCommonUtils.class);
+public class CommonUtils {
+    private static final Logger logger = LoggerFactory.getLogger(CommonUtils.class);
 
     /**
      * 间隔符

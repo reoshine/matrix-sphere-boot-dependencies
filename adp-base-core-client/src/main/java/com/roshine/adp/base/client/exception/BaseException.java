@@ -1,6 +1,6 @@
 package com.roshine.adp.base.client.exception;
 
-import com.roshine.adp.base.client.utils.AdpCommonUtils;
+import com.roshine.adp.base.client.utils.CommonUtils;
 
 import java.io.Serial;
 
@@ -29,7 +29,7 @@ public class BaseException extends RuntimeException {
     }
 
     public BaseException(ErrorCode errorCode, String extendMessage) {
-        super(AdpCommonUtils.format(errorCode.getErrorMessage(), extendMessage));
+        super(CommonUtils.format(errorCode.getErrorMessage(), extendMessage));
         this.errorCode = errorCode;
     }
 }

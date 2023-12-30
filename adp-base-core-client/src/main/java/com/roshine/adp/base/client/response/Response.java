@@ -2,7 +2,7 @@ package com.roshine.adp.base.client.response;
 
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.roshine.adp.base.client.utils.AdpCommonUtils;
+import com.roshine.adp.base.client.utils.CommonUtils;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -157,7 +157,7 @@ public class Response<T> implements Serializable {
             }
             builder = new StringBuffer(builder.substring(0, builder.toString().length() - 1));
             builder.append("]");
-            this.setMessage(AdpCommonUtils.format(ResultCode.PARAM_VALIDATOR_ERROR_MESSAGE, builder.toString()));
+            this.setMessage(CommonUtils.format(ResultCode.PARAM_VALIDATOR_ERROR_MESSAGE, builder.toString()));
         }
     }
 

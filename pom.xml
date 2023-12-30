@@ -4,9 +4,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.roshine.adp</groupId>
-    <artifactId>adp-boot</artifactId>
+    <artifactId>adp-boot-dependencies</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
+
+    <modules>
+        <module>adp-boot</module>
+        <module>adp-base-core-client</module>
+        <module>adp-base-core</module>
+        <module>adp-auth-core</module>
+    </modules>
 
     <properties>
         <java.version>17</java.version>

@@ -1,5 +1,6 @@
 package com.roshine.adp.base.core.utils;
 
+import com.roshine.adp.base.client.utils.CommonUtils;
 import jakarta.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,7 @@ import org.springframework.data.redis.core.types.Expiration;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -46,10 +48,10 @@ public class RedisLock {
      * 尝试加锁(仅一次)
      * @param lockKey 锁key
      * @param expireSeconds 锁超时时间(秒)
-     * @return
+     * @return 加锁成功的UUID
      */
     public static String tryLock(@Nonnull String lockKey, int expireSeconds) {
-        String uuid = CommonUtils.getUuid();
+        String uuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
         boolean result = tryLock(lockKey, uuid, expireSeconds);
         return result ? uuid : null;
     }
@@ -59,7 +61,7 @@ public class RedisLock {
      * @param lockKey 锁key
      * @param lockValue 锁value
      * @param expireSeconds 锁超时时间(秒)
-     * @return
+     * @return true or false
      */
     public static boolean tryLock(@Nonnull String lockKey, @Nonnull String lockValue, int expireSeconds) {
         try {
@@ -81,7 +83,7 @@ public class RedisLock {
      * @param expireSeconds 锁超时时间(秒)
      * @param tryTimes 最大尝试次数
      * @param sleepMillis 每两次间的休眠时间(毫秒)
-     * @return
+     * @return 加锁成功的UUID
      */
     public static String lock(@Nonnull String lockKey, int expireSeconds, int tryTimes, long sleepMillis) {
         String uuid = CommonUtils.getUuid();
@@ -96,7 +98,7 @@ public class RedisLock {
      * @param expireSeconds 锁超时时间(秒)
      * @param tryTimes 最大尝试次数
      * @param sleepMillis 每两次间的休眠时间(毫秒)
-     * @return
+     * @return true or false
      */
     public static boolean lock(@Nonnull String lockKey, @Nonnull String lockValue, int expireSeconds, int tryTimes, long sleepMillis) {
         boolean result = false;
