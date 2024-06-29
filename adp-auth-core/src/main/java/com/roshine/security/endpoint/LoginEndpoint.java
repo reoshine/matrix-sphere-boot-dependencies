@@ -5,23 +5,23 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.roshine.adp.base.client.response.RPCServiceHelper;
+import com.roshine.adp.base.core.utils.RedisUtils;
 import com.roshine.adp.security.client.domain.dto.OAuth2RegisteredClientDTO;
 import com.roshine.adp.security.client.domain.req.IOAuth2RegisteredClientRequest;
-import com.roshine.adp.security.client.service.RpcAuthClientDetailsService;
 import com.roshine.security.constant.SecurityConstant;
 import com.roshine.security.props.SsoProperties;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -37,20 +37,26 @@ public class LoginEndpoint {
     @Autowired
     private SsoProperties ssoProperties;
 
-    @Autowired
-    @DubboReference(group = "adp-sso-service", version = "1.0.0")
-    private RpcAuthClientDetailsService rpcAuthClientDetailsService;
+    @Value("${spring.application.name}")
+    private String clientId;
 
     @GetMapping(SecurityConstant.CLIENT_LOGIN_URI)
     public RedirectView clientLogin() {
         IOAuth2RegisteredClientRequest request = new IOAuth2RegisteredClientRequest();
         request.setClientId(ssoProperties.getClientId());
-        OAuth2RegisteredClientDTO registeredClientDTO = RPCServiceHelper.handleResponse(rpcAuthClientDetailsService.loadClientByClientId(request));
-        String uri = registeredClientDTO.getRedirectUris().stream().map(item -> "redirect_uri=" + item).collect(Collectors.joining("&"));
+
+        String registeredClientStr = RedisUtils.get(SecurityConstant.CACHE_TOKEN_PREFIX + SecurityConstant.REGISTERED_CLIENT);
+        List<OAuth2RegisteredClientDTO> registeredClientDTOList = JSONUtil.toList(registeredClientStr, OAuth2RegisteredClientDTO.class);
+        Map<String, OAuth2RegisteredClientDTO> registeredClientMap = registeredClientDTOList.parallelStream().collect(Collectors.toMap(OAuth2RegisteredClientDTO::getClientId, a -> a, (k1, k2) -> k1));
+        if (!registeredClientMap.containsKey(clientId)) {
+            throw new IllegalArgumentException(StrUtil.format("不存在此客户: {}", clientId));
+        }
+        OAuth2RegisteredClientDTO registeredClient = registeredClientMap.get(clientId);
+        String uri = registeredClient.getRedirectUris().stream().map(item -> "redirect_uri=" + item).collect(Collectors.joining("&"));
         String template = ssoProperties.getAdpSsoUriPrefix()  + SecurityConstant.OAUTH_AUTHORIZE_URL + "?response_type=code&scope={}&client_id={}&state={}&{}";
         String authorizeUrl = StrUtil.format(template,
                 "message.read",
-                registeredClientDTO.getClientId(),
+                clientId,
                 "ok",
                 uri);
         log.info("认证地址: {}", authorizeUrl);
@@ -59,19 +65,23 @@ public class LoginEndpoint {
 
     @GetMapping(value = SecurityConstant.LOGIN_CALLBACK_URI)
     public void callback(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        IOAuth2RegisteredClientRequest clientRequest = new IOAuth2RegisteredClientRequest();
-        clientRequest.setClientId(ssoProperties.getClientId());
-        OAuth2RegisteredClientDTO registeredClientDTO = RPCServiceHelper.handleResponse(rpcAuthClientDetailsService.loadClientByClientId(clientRequest));
+        String registeredClientStr = RedisUtils.get(SecurityConstant.CACHE_TOKEN_PREFIX + SecurityConstant.REGISTERED_CLIENT);
+        List<OAuth2RegisteredClientDTO> registeredClientDTOList = JSONUtil.toList(registeredClientStr, OAuth2RegisteredClientDTO.class);
+        Map<String, OAuth2RegisteredClientDTO> registeredClientMap = registeredClientDTOList.parallelStream().collect(Collectors.toMap(OAuth2RegisteredClientDTO::getClientId, a -> a, (k1, k2) -> k1));
+        if (!registeredClientMap.containsKey(clientId)) {
+            throw new IllegalArgumentException(StrUtil.format("不存在此客户: {}", clientId));
+        }
+        OAuth2RegisteredClientDTO registeredClient = registeredClientMap.get(clientId);
         String code = request.getParameter("code");
         Assert.isTrue(StrUtil.isNotBlank(code), "授权码不存在");
         log.info("authCode = {}", code);
         Map<String, Object> param = new HashMap<>(8);
         param.put("grant_type", "authorization_code");
-        param.put("redirect_uri", registeredClientDTO.getRedirectUris().parallelStream().findFirst().orElse(null));
+        param.put("redirect_uri", registeredClient.getRedirectUris().parallelStream().findFirst().orElse(null));
         param.put("code", code);
         String url = ssoProperties.getAdpSsoUriPrefix() + SecurityConstant.OAUTH_TOKEN_URL;
         String body = HttpRequest.post(url)
-                .basicAuth(registeredClientDTO.getClientId(), ssoProperties.getClientSecret())
+                .basicAuth(registeredClient.getClientId(), ssoProperties.getClientSecret())
                 .form(param)
                 .execute()
                 .body();
@@ -80,6 +90,6 @@ public class LoginEndpoint {
         String refreshToken = parseObj.getStr(SecurityConstant.REFRESH_TOKEN);
         log.info("accessToken = {}", accessToken);
         log.info("refreshToken = {}", refreshToken);
-        response.sendRedirect(registeredClientDTO.getSuccessRedirectUri() + "?accessToken=" + accessToken);
+        response.sendRedirect(registeredClient.getSuccessRedirectUri() + "?accessToken=" + accessToken);
     }
 }

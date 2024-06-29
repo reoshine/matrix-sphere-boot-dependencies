@@ -9,6 +9,16 @@ package com.roshine.security.constant;
 public class SecurityConstant {
 
     /**
+     * redisToken前缀
+     */
+    public final static String CACHE_TOKEN_PREFIX = "ADP-SSO:";
+
+    /**
+     * registered_client前缀
+     */
+    public final static String REGISTERED_CLIENT = "REGISTERED-CLIENT:";
+
+    /**
      * 登录页面
      */
     public final static String LOGIN_PAGE = "login";
@@ -57,12 +67,12 @@ public class SecurityConstant {
     /**
      * clientId
      */
-    public final static String CLIENT_ID = "adp-management";
+    public final static String CLIENT_ID = "adp-matrix";
 
     /**
      * clientSecret
      */
-    public final static String CLIENT_SECRET = "adp-management-secret";
+    public final static String CLIENT_SECRET = "adp-matrix-secret";
 
     /**
      * access_token

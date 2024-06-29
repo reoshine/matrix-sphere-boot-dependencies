@@ -1,10 +1,15 @@
 package com.roshine.security.config;
 
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
+import com.roshine.adp.base.core.utils.RedisUtils;
+import com.roshine.adp.security.client.domain.dto.OAuth2RegisteredClientDTO;
 import com.roshine.security.constant.SecurityConstant;
 import com.roshine.security.exception.SsoAuthenticationEntryPoint;
 import com.roshine.security.handler.SsoAccessDeniedHandler;
 import com.roshine.security.props.SsoProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,20 +25,30 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 
 /**
  * @author roshine
  * @version 1.0.0
  * @date 2020-10-13 21:47
- * @Description
  */
 @EnableWebSecurity
 @Configuration
 @Order(-1)
 public class WebSecurityConfig {
 
+    private final SsoProperties ssoProperties;
+
+    @Value("${spring.application.name}")
+    private String clientId;
+
     @Autowired
-    private SsoProperties ssoProperties;
+    public WebSecurityConfig(SsoProperties ssoProperties) {
+        this.ssoProperties = ssoProperties;
+    }
 
     /**
      * 配置认证相关的过滤器链
@@ -70,6 +85,13 @@ public class WebSecurityConfig {
 
     @Bean
     public SpringOpaqueTokenIntrospector opaqueTokenIntrospector() {
-        return new SpringOpaqueTokenIntrospector(ssoProperties.getAdpSsoUriPrefix()  + SecurityConstant.OAUTH_INTROSPECT, SecurityConstant.CLIENT_ID, SecurityConstant.CLIENT_SECRET);
+        String s = RedisUtils.get(SecurityConstant.CACHE_TOKEN_PREFIX + SecurityConstant.REGISTERED_CLIENT);
+        List<OAuth2RegisteredClientDTO> registeredClientDTOList = JSONUtil.toList(s, OAuth2RegisteredClientDTO.class);
+        Map<String, String> registeredClientMap = registeredClientDTOList.parallelStream().collect(Collectors.toMap(OAuth2RegisteredClientDTO::getClientId, OAuth2RegisteredClientDTO::getClientSecret, (k1, k2) -> k1));
+        if (!registeredClientMap.containsKey(clientId)) {
+            throw new IllegalArgumentException(StrUtil.format("不存在此客户: {}", clientId));
+        }
+        String clientSecret = registeredClientMap.get(clientId);
+        return new SpringOpaqueTokenIntrospector(ssoProperties.getAdpSsoUriPrefix()  + SecurityConstant.OAUTH_INTROSPECT, clientId, clientSecret);
     }
 }
