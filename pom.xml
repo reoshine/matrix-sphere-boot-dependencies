@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.roshine.adp</groupId>
-    <artifactId>adp-boot-dependencies</artifactId>
+    <artifactId>matrix-sphere-boot-dependencies</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
