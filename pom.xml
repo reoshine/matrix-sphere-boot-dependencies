@@ -3,15 +3,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.roshine.adp</groupId>
+    <groupId>com.roshine.matrixsphere</groupId>
     <artifactId>matrix-sphere-boot-dependencies</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>adp-base-core-client</module>
-        <module>adp-base-core</module>
-        <module>adp-auth-core</module>
+        <module>matrix-sphere-base-core-client</module>
+        <module>matrix-sphere-base-core</module>
+        <module>matrix-sphere-auth-core</module>
     </modules>
 
     <properties>
@@ -52,7 +52,8 @@
         <lombok.version>1.18.28</lombok.version>
         <lombok.mapstruct.binding.version>0.2.0</lombok.mapstruct.binding.version>
         <aspectj-version>1.9.5</aspectj-version>
-        <hutool.version>5.8.23</hutool.version>
+        <hutool.version>5.8.33</hutool.version>
+        <easyexcel.version>4.0.3</easyexcel.version>
         <jaxb-api.version>2.4.0-b180830.0359</jaxb-api.version>
         <jaxb-impl.version>4.0.3</jaxb-impl.version>
         <activation.version>1.1.1</activation.version>
@@ -273,20 +274,14 @@
 
             <dependency>
                 <groupId>cn.hutool</groupId>
-                <artifactId>hutool-core</artifactId>
+                <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-http</artifactId>
-                <version>${hutool.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-json</artifactId>
-                <version>${hutool.version}</version>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>${easyexcel.version}</version>
             </dependency>
 
         </dependencies>

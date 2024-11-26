@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.roshine.matrixsphere</groupId>
+        <artifactId>matrix-sphere-boot-dependencies</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>matrix-sphere-auth-core</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <properties>
+        <adp.client.version>1.0.0-SNAPSHOT</adp.client.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.roshine.matrixsphere</groupId>
+            <artifactId>matrix-sphere-base-core</artifactId>
+            <version>${adp.client.version}</version>
+        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>com.roshine.matrixsphere</groupId>-->
+<!--            <artifactId>matrix-sphere-sso-client</artifactId>-->
+<!--            <version>${adp.client.version}</version>-->
+<!--        </dependency>-->
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>oauth2-oidc-sdk</artifactId>
+            <version>10.15</version>
+        </dependency>
+    </dependencies>
+</project>
