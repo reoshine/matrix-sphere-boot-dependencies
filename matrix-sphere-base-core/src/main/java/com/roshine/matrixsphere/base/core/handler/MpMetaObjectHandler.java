@@ -1,8 +1,10 @@
 package com.roshine.matrixsphere.base.core.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -15,6 +17,11 @@ import java.time.LocalDateTime;
 @Slf4j
 @Component
 public class MpMetaObjectHandler implements MetaObjectHandler {
+
+    @Bean
+    public OptimisticLockerInnerInterceptor optimisticLockerInnerInterceptor() {
+        return new OptimisticLockerInnerInterceptor();
+    }
 
     /**
      * 插入时的填充策略

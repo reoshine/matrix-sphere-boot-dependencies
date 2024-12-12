@@ -46,6 +46,8 @@
         <mapstruct.version>1.5.5.Final</mapstruct.version>
 
         <!-- 工具包版本 -->
+        <gitlab4j-api.version>6.0.0-rc.2</gitlab4j-api.version>
+        <jenkins-client.version>0.3.8</jenkins-client.version>
         <jackson-core.version>2.13.3</jackson-core.version>
         <fastjson.version>1.2.51</fastjson.version>
         <guava.version>28.1-jre</guava.version>
@@ -54,10 +56,12 @@
         <aspectj-version>1.9.5</aspectj-version>
         <hutool.version>5.8.33</hutool.version>
         <easyexcel.version>4.0.3</easyexcel.version>
+        <commons-io.version>2.18.0</commons-io.version>
         <jaxb-api.version>2.4.0-b180830.0359</jaxb-api.version>
         <jaxb-impl.version>4.0.3</jaxb-impl.version>
         <activation.version>1.1.1</activation.version>
         <commons-pool2.verision>2.12.0</commons-pool2.verision>
+        <dom4j.version>2.1.4</dom4j.version>
     </properties>
 
     <dependencyManagement>
@@ -158,6 +162,7 @@
                 <version>${lombok.mapstruct.binding.version}</version>
             </dependency>
 
+            <!-- mybatisPlus配置 -->
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
@@ -174,6 +179,19 @@
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
                 <version>${knife4j.openapi2.version}</version>
+            </dependency>
+
+            <!-- 常用工具类 -->
+            <dependency>
+                <groupId>org.gitlab4j</groupId>
+                <artifactId>gitlab4j-api</artifactId>
+                <version>${gitlab4j-api.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.offbytwo.jenkins</groupId>
+                <artifactId>jenkins-client</artifactId>
+                <version>${jenkins-client.version}</version>
             </dependency>
 
             <dependency>
@@ -231,6 +249,12 @@
             </dependency>
 
             <dependency>
+                <groupId>org.dom4j</groupId>
+                <artifactId>dom4j</artifactId>
+                <version>${dom4j.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.apache.rocketmq</groupId>
                 <artifactId>rocketmq-spring-boot-starter</artifactId>
                 <version>${rocketmq-spring-boot-starter-version}</version>
@@ -282,6 +306,12 @@
                 <groupId>com.alibaba</groupId>
                 <artifactId>easyexcel</artifactId>
                 <version>${easyexcel.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
             </dependency>
 
         </dependencies>
