@@ -317,6 +317,17 @@
         </dependencies>
     </dependencyManagement>
 
+    <distributionManagement>
+        <repository>
+            <id>roshine-releases</id>
+            <url>http://192.168.0.110:8089/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>roshine-snapshots</id>
+            <url>http://192.168.0.110:8089/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <build>
         <plugins>
             <plugin>
