@@ -72,6 +72,22 @@
         </dependency>
     </dependencies>
 
+    <repositories>
+        <repository>
+            <id>maven-public</id>
+            <name>maven-public</name>
+            <url>http://192.168.0.110:8089/repository/maven-public/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <build>
         <finalName>adp-base-core</finalName>
         <plugins>
