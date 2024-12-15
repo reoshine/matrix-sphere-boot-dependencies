@@ -13,7 +13,7 @@ pipeline {
         stage("maven build") {
             steps {
                 sh '''
-                    mvn clean package dependency:purge-local-repository -Dmaven.test.skip=true
+                    mvn -U clean package -Dmaven.test.skip=true
                     docker images
                    '''
             }
