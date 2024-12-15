@@ -319,11 +319,11 @@
 
     <distributionManagement>
         <repository>
-            <id>roshine-releases</id>
+            <id>nexus-public</id>
             <url>http://192.168.0.110:8089/repository/maven-releases/</url>
         </repository>
         <snapshotRepository>
-            <id>roshine-snapshots</id>
+            <id>nexus-public</id>
             <url>http://192.168.0.110:8089/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
@@ -498,6 +498,19 @@
 
     <repositories>
         <repository>
+            <id>nexus-public</id>
+            <name>nexus-public</name>
+            <url>http://192.168.0.110:8089/repository/maven-public/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+        <repository>
             <id>aliyun-repos</id>
             <name>Aliyun Repository</name>
             <url>http://maven.aliyun.com/nexus/content/groups/public</url>
@@ -551,6 +564,19 @@
     </repositories>
 
     <pluginRepositories>
+        <pluginRepository>
+            <id>nexus-public</id>
+            <name>nexus-public</name>
+            <url>http://192.168.0.110:8089/repository/maven-public/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </pluginRepository>
         <pluginRepository>
             <id>aliyun-repos</id>
             <name>Aliyun Repository</name>

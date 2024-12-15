@@ -105,8 +105,8 @@
 
     <repositories>
         <repository>
-            <id>maven-public</id>
-            <name>maven-public</name>
+            <id>nexus-public</id>
+            <name>nexus-public</name>
             <url>http://192.168.0.110:8089/repository/maven-public/</url>
             <releases>
                 <enabled>true</enabled>
