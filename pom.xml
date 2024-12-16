@@ -511,7 +511,7 @@
             </snapshots>
         </repository>
         <repository>
-            <id>aliyun-repos</id>
+            <id>aliyunmaven-public</id>
             <name>Aliyun Repository</name>
             <url>http://maven.aliyun.com/nexus/content/groups/public</url>
             <releases>
@@ -578,7 +578,7 @@
             </snapshots>
         </pluginRepository>
         <pluginRepository>
-            <id>aliyun-repos</id>
+            <id>aliyunmaven-public</id>
             <name>Aliyun Repository</name>
             <url>https://maven.aliyun.com/nexus/content/groups/public</url>
             <releases>
