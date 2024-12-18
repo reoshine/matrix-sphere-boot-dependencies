@@ -22,12 +22,6 @@
             <version>${adp.client.version}</version>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.roshine.matrixsphere</groupId>-->
-<!--            <artifactId>matrix-sphere-sso-client</artifactId>-->
-<!--            <version>${adp.client.version}</version>-->
-<!--        </dependency>-->
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
@@ -36,7 +30,6 @@
         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>oauth2-oidc-sdk</artifactId>
-            <version>10.15</version>
         </dependency>
     </dependencies>
 
