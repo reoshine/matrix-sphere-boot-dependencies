@@ -89,6 +89,6 @@ public class LoginEndpoint {
         String refreshToken = parseObj.getStr(SecurityConstant.REFRESH_TOKEN);
         log.info("accessToken = {}", accessToken);
         log.info("refreshToken = {}", refreshToken);
-        response.sendRedirect(registeredClient.getSuccessRedirectUri() + "?accessToken=" + accessToken);
+        response.sendRedirect("http://192.168.0.10:8081/login" + "?accessToken=" + accessToken + "&refreshToken=" + refreshToken);
     }
 }
