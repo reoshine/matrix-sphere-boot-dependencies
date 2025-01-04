@@ -20,6 +20,10 @@ public class ArgumentException extends BaseException {
         super(errorCode);
     }
 
+    public ArgumentException(Exception e) {
+        super(e);
+    }
+
     public ArgumentException(ErrorCode errorCode, String extendMessage) {
         super(errorCode, extendMessage);
     }

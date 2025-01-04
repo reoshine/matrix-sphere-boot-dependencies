@@ -1,4 +1,4 @@
-package com.roshine.matrixsphere.security.exception;
+package com.roshine.matrixsphere.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.roshine.matrixsphere.base.client.response.Response;

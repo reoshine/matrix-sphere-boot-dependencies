@@ -5,7 +5,7 @@ import cn.hutool.json.JSONUtil;
 import com.roshine.matrixsphere.base.core.utils.RedisUtils;
 import com.roshine.matrixsphere.security.constant.SecurityConstant;
 import com.roshine.matrixsphere.security.domain.OAuth2RegisteredClientDTO;
-import com.roshine.matrixsphere.security.exception.SsoAuthenticationEntryPoint;
+import com.roshine.matrixsphere.security.handler.SsoAuthenticationEntryPoint;
 import com.roshine.matrixsphere.security.handler.SsoAccessDeniedHandler;
 import com.roshine.matrixsphere.security.props.SsoProperties;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,7 @@
 package com.roshine.matrixsphere.base.client.exception;
 
 import com.roshine.matrixsphere.base.client.utils.CommonUtils;
+import lombok.Getter;
 
 import java.io.Serial;
 
@@ -13,6 +14,7 @@ import java.io.Serial;
  * @version 1.0.0
  * @date 2023-04-19 22:24
  */
+@Getter
 public class BaseException extends RuntimeException {
 
     @Serial
@@ -21,11 +23,15 @@ public class BaseException extends RuntimeException {
     /**
      * 异常码
      */
-    protected ErrorCode errorCode;
+    public ErrorCode errorCode;
 
     public BaseException(ErrorCode errorCode) {
         super(errorCode.getErrorMessage());
         this.errorCode = errorCode;
+    }
+
+    public BaseException(Exception e) {
+        super(e);
     }
 
     public BaseException(ErrorCode errorCode, String extendMessage) {

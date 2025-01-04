@@ -16,7 +16,7 @@ public class SecurityConstant {
     /**
      * registered_client前缀
      */
-    public final static String REGISTERED_CLIENT = "REGISTERED-CLIENT:";
+    public final static String REGISTERED_CLIENT = "REGISTERED-CLIENT";
 
     /**
      * 登录页面

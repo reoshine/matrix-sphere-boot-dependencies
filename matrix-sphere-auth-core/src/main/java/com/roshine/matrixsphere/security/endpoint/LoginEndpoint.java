@@ -7,7 +7,6 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.roshine.matrixsphere.base.core.utils.RedisUtils;
 import com.roshine.matrixsphere.security.constant.SecurityConstant;
-import com.roshine.matrixsphere.security.domain.IOAuth2RegisteredClientRequest;
 import com.roshine.matrixsphere.security.domain.OAuth2RegisteredClientDTO;
 import com.roshine.matrixsphere.security.props.SsoProperties;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,9 +41,6 @@ public class LoginEndpoint {
 
     @GetMapping(SecurityConstant.CLIENT_LOGIN_URI)
     public RedirectView clientLogin() {
-        IOAuth2RegisteredClientRequest request = new IOAuth2RegisteredClientRequest();
-        request.setClientId(ssoProperties.getClientId());
-
         String registeredClientStr = RedisUtils.get(SecurityConstant.CACHE_TOKEN_PREFIX + SecurityConstant.REGISTERED_CLIENT);
         List<OAuth2RegisteredClientDTO> registeredClientDTOList = JSONUtil.toList(registeredClientStr, OAuth2RegisteredClientDTO.class);
         Map<String, OAuth2RegisteredClientDTO> registeredClientMap = registeredClientDTOList.parallelStream().collect(Collectors.toMap(OAuth2RegisteredClientDTO::getClientId, a -> a, (k1, k2) -> k1));
