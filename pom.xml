@@ -46,7 +46,7 @@
         <mapstruct.version>1.5.5.Final</mapstruct.version>
 
         <!-- 工具包版本 -->
-        <gitlab4j-api.version>6.0.0-rc.7</gitlab4j-api.version>
+        <gitlab4j-api.version>6.0.0-rc.10</gitlab4j-api.version>
         <jenkins-client.version>0.3.8</jenkins-client.version>
         <jackson-core.version>2.13.3</jackson-core.version>
         <fastjson.version>1.2.62</fastjson.version>
@@ -328,11 +328,11 @@
     <distributionManagement>
         <repository>
             <id>nexus-public</id>
-            <url>http://192.168.0.110:8089/repository/maven-releases/</url>
+            <url>http://192.168.0.90:8089/repository/maven-releases/</url>
         </repository>
         <snapshotRepository>
             <id>nexus-public</id>
-            <url>http://192.168.0.110:8089/repository/maven-snapshots/</url>
+            <url>http://192.168.0.90:8089/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
@@ -366,10 +366,10 @@
                         </path>
                     </annotationProcessorPaths>
                     <basedir/>
-                    <buildDirectory/>
                     <mainOutputDirectory/>
                     <outputDirectory/>
                     <projectArtifact/>
+                    <mojoStatusPath/>
                 </configuration>
             </plugin>
 
