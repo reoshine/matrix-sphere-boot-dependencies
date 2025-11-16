@@ -14,6 +14,7 @@ pipeline {
             steps {
                 sh '''
                     mvn -U clean package -Dmaven.test.skip=true
+                    mvn deploy
                     docker images
                    '''
             }
