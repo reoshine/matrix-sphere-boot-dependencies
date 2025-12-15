@@ -30,7 +30,7 @@ public class PageRequest extends ServiceRequest implements Serializable {
      * 每页查询数量
      */
     @NotNull(message = "每页查询数量[必填]")
-    private Integer pageCount = 10;
+    private Integer pageSize = 10;
 
     /**
      * 分页标识 是否分页

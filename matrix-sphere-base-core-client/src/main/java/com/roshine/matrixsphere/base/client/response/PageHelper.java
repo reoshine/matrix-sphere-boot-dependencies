@@ -54,9 +54,9 @@ public class PageHelper<T> implements Serializable {
     }
 
     public static <T> PageHelper<T> init(PageRequest request) {
-        PageHelper<T> dto = new PageHelper<>(request.getPageNum(), request.getPageCount());
+        PageHelper<T> dto = new PageHelper<>(request.getPageNum(), request.getPageSize());
         if (request.isPaging()) {
-            dto.page = com.github.pagehelper.PageHelper.startPage(request.getPageNum(), request.getPageCount());
+            dto.page = com.github.pagehelper.PageHelper.startPage(request.getPageNum(), request.getPageSize());
         }else {
             dto.page = null;
         }
@@ -70,10 +70,10 @@ public class PageHelper<T> implements Serializable {
 
     public PageResponse<T> result() {
         PageResponse<T> dto = new PageResponse<>();
-        dto.setPageCount(this.page == null ? Integer.MIN_VALUE : this.page.getPageSize());
+        dto.setPageSize(this.page == null ? Integer.MIN_VALUE : this.page.getPageSize());
         dto.setPageNum(this.page == null ? Integer.MIN_VALUE : this.page.getPageNum());
         dto.setTotal(this.page == null ? Integer.MIN_VALUE : this.page.getTotal());
-        dto.setData(this.data == null ? this.page.getResult() : this.data);
+        dto.setList(this.data == null ? this.page.getResult() : this.data);
         return dto;
     }
 }
