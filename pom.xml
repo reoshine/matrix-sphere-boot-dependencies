@@ -65,6 +65,7 @@
         <dom4j.version>2.1.4</dom4j.version>
         <sm-crypto.version>0.3.2</sm-crypto.version>
         <bcpkix-jdk18on.version>1.73</bcpkix-jdk18on.version>
+        <commons-text.version>1.10.0</commons-text.version>
     </properties>
 
     <dependencyManagement>
@@ -188,6 +189,12 @@
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
                 <version>${knife4j.openapi2.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-text</artifactId>
+                <version>${commons-text.version}</version>
             </dependency>
 
             <!-- 常用工具类 -->
