@@ -1,57 +1,44 @@
 package com.roshine.matrixsphere.base.core.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
+import com.roshine.matrixsphere.base.client.login.LoginInfoHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
 /**
  * @author roshine
- * @version 1.0.0
- * @date 2022-08-05 23:56
+ * @version 2.0.0
+ * MyBatis-Plus 自动填充字段策略
  */
 @Slf4j
 @Component
 public class MpMetaObjectHandler implements MetaObjectHandler {
 
-    @Bean
-    public MybatisPlusInterceptor myOptimisticLockerInnerInterceptor(){
-        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-        interceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());
-        return interceptor;
-    }
-
-    /**
-     * 插入时的填充策略
-     *
-     * @param metaObject 元数据
-     */
     @Override
     public void insertFill(MetaObject metaObject) {
-        this.fillStrategy(metaObject, "createBy", 1L);
-        this.fillStrategy(metaObject, "createByName", "roshine");
-        this.fillStrategy(metaObject, "gmtCreate", LocalDateTime.now());
-        this.fillStrategy(metaObject, "modifyBy", 1L);
-        this.fillStrategy(metaObject, "modifyByName", "roshine");
-        this.fillStrategy(metaObject, "gmtModify", LocalDateTime.now());
-        this.fillStrategy(metaObject, "isDeleted", 0);
-        this.fillStrategy(metaObject, "version", 0L);
+        // 从 ThreadLocal 中获取当前登录用户的 ID (如果没有，默认为 "system")
+        String userId = LoginInfoHelper.getUserId() != null ? LoginInfoHelper.getUserId() : "system";
+
+        // 统一使用 String 类型的用户ID (适配 SSO 重构)
+        this.strictInsertFill(metaObject, "createBy", String.class, userId);
+        this.strictInsertFill(metaObject, "gmtCreate", LocalDateTime.class, LocalDateTime.now());
+
+        // 我们没有 modify 相关的必须字段可以在插入时不填，看业务需要
+        this.strictInsertFill(metaObject, "modifyBy", String.class, userId);
+        this.strictInsertFill(metaObject, "gmtModify", LocalDateTime.class, LocalDateTime.now());
+
+        this.strictInsertFill(metaObject, "isDeleted", Integer.class, 0);
+        this.strictInsertFill(metaObject, "version", Long.class, 0L);
     }
 
-    /**
-     * 更新时的填充策略
-     *
-     * @param metaObject 元数据
-     */
     @Override
     public void updateFill(MetaObject metaObject) {
-        this.fillStrategy(metaObject, "modifyBy", 1L);
-        this.fillStrategy(metaObject, "modifyByName", "roshine");
-        this.fillStrategy(metaObject, "gmtModify", LocalDateTime.now());
+        String userId = LoginInfoHelper.getUserId() != null ? LoginInfoHelper.getUserId() : "system";
+
+        this.strictUpdateFill(metaObject, "modifyBy", String.class, userId);
+        this.strictUpdateFill(metaObject, "gmtModify", LocalDateTime.class, LocalDateTime.now());
     }
 }

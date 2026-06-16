@@ -5,11 +5,9 @@ import java.io.Serial;
 /**
  * <p>参数异常</p>
  * <p>在处理业务过程中校验参数出现错误, 可以抛出该异常</p>
- * <p>编写公共代码（如工具类）时，对传入参数检查不通过时，可以抛出该异常</p>
  *
  * @author luoxin
- * @version 1.0.0
- * @date 2023-04-19 22:28
+ * @version 2.0.0
  */
 public class ArgumentException extends BaseException {
 
@@ -20,11 +18,17 @@ public class ArgumentException extends BaseException {
         super(errorCode);
     }
 
+    public ArgumentException(String message) {
+        super(400, message); // 默认 400 Bad Request
+    }
+
     public ArgumentException(Exception e) {
-        super(e);
+        super(400, e.getMessage() != null ? e.getMessage() : "参数校验异常");
+        this.initCause(e); // 传递原生异常堆栈，方便排查
     }
 
     public ArgumentException(ErrorCode errorCode, String extendMessage) {
-        super(errorCode, extendMessage);
+        // 将 ErrorCode 原本的 message 和 扩展 message 拼接起来
+        super(errorCode.getCode(), errorCode.getMessage() + ": " + extendMessage);
     }
 }

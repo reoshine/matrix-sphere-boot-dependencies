@@ -1,92 +1,96 @@
-# adp-boot-dependencies
+# Matrix Sphere Boot Dependencies
 
+Matrix Sphere 企业级微服务底层基础架构 — 统一依赖管理与核心模块聚合。
 
+## 项目简介
 
-## Getting started
+本工程是 Matrix Sphere 微服务体系的 **根项目（Parent POM）**，用于统一管理所有子模块的依赖版本、插件配置与仓库地址。子模块涵盖通用客户端库、核心支撑层以及安全认证组件，为上层业务服务提供开箱即用的基础能力。
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+通过此项目，各业务服务无需自行维护版本号，只需引入所需模块即可获得一致的运行环境。
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+## 模块概览
 
-## Add your files
+| 模块                               | 说明                                          | 依赖关系                  |
+|----------------------------------|---------------------------------------------|-----------------------|
+| `matrix-sphere-base-core-client` | 通用客户端库（DTO、异常、请求/响应、工具类）                    | 无 Spring 容器依赖，纯 Java  |
+| `matrix-sphere-base-core`        | 核心支撑层（全局异常处理、Redis、MyBatis-Plus、JSON 配置）    | 依赖 `base-core-client` |
+| `matrix-sphere-auth-core`        | 安全认证核心（OAuth2 Resource Server、CORS、SSO 上下文） | 依赖 `base-core`        |
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+## 技术栈
 
+| 类别     | 技术                            | 版本             |
+|--------|-------------------------------|----------------|
+| 基础框架   | Spring Boot                   | 3.1.5          |
+| 微服务    | Spring Cloud                  | 2022.0.4       |
+| 服务治理   | Spring Cloud Alibaba          | 2022.0.0.0-RC2 |
+| ORM    | MyBatis-Plus                  | 3.5.4.1        |
+| 数据库连接池 | Druid                         | 1.2.19         |
+| 缓存     | Redisson                      | 3.24.3         |
+| RPC    | Apache Dubbo                  | 3.2.5          |
+| 消息队列   | RocketMQ                      | 2.2.3          |
+| API 文档 | Knife4j                       | 4.5.0          |
+| 工具库    | Hutool、Guava、MapStruct、Lombok | -              |
+| 国密加密   | sm-crypto、Bouncy Castle       | -              |
+
+## 环境要求
+
+- JDK 17+
+- Apache Maven 3.8+
+- Nexus 私服（用于依赖管理与发布）
+
+## 快速开始
+
+```bash
+# 克隆项目
+git clone http://192.168.0.91:8088/matrixsphere/matrix-sphere-boot-dependencies.git
+
+# 编译安装到本地仓库（跳过测试）
+mvn clean install -Dmaven.test.skip=true
+
+# 部署到远程私服
+mvn deploy
 ```
-cd existing_repo
-git remote add origin http://192.168.0.110:8088/adp/adp-boot-dependencies.git
-git branch -M main
-git push -uf origin main
+
+## 引入方式
+
+在业务服务的 `pom.xml` 中引入所需模块：
+
+```xml
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>com.roshine.matrixsphere</groupId>
+            <artifactId>matrix-sphere-boot-dependencies</artifactId>
+            <version>${matrix-sphere.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+
+<dependencies>
+    <dependency>
+        <groupId>com.roshine.matrixsphere</groupId>
+        <artifactId>matrix-sphere-base-core</artifactId>
+    </dependency>
+    <!-- 按需引入其他模块 -->
+</dependencies>
 ```
 
-## Integrate with your tools
+## CI/CD
 
-- [ ] [Set up project integrations](http://192.168.0.110:8088/adp/adp-boot-dependencies/-/settings/integrations)
+项目集成 Jenkins Pipeline，自动执行以下流程：
 
-## Collaborate with your team
+1. 从 GitLab 拉取指定分支代码
+2. 执行 `mvn clean package`（跳过测试）
+3. 执行 `mvn deploy` 发布到 Nexus 私服
+4. 清理工作空间
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+## 发布管理
 
-## Test and Deploy
+- **Releases**: `http://192.168.0.90:8089/repository/maven-releases/`
+- **Snapshots**: `http://192.168.0.90:8089/repository/maven-snapshots/`
 
-Use the built-in continuous integration in GitLab.
+## 许可证
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+本项目基于 Apache License 2.0 许可协议。

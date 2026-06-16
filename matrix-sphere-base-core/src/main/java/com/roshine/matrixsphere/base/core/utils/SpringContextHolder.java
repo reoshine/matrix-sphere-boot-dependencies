@@ -1,128 +1,103 @@
 package com.roshine.matrixsphere.base.core.utils;
 
 import jakarta.annotation.Nonnull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 /**
  * @author roshine
- * @version 1.0.0
- * @date 2020-10-17 0:46
- * @Description 封装SpringContext工具类
+ * @version 2.0.0
+ * 企业级 Spring 容器上下文工具类
+ * 核心特性：
+ * 1. @Lazy(false) 强制提早初始化，防止其他 Bean 调用时报空指针。
+ * 2. 实现 DisposableBean，在应用上下文销毁时清理静态变量，防止内存泄漏。
+ * 3. 增加强校验拦截，杜绝上下文未加载完的非法调用。
  */
+@Slf4j
 @Component
-public class SpringContextHolder implements ApplicationContextAware {
+@Lazy(false)
+public class SpringContextHolder implements ApplicationContextAware, DisposableBean {
 
-    /**
-     * Spring应用上下文环境
-     */
     private static ApplicationContext applicationContext;
 
     /**
-     * 实现ApplicationContextAware接口的回调方法，设置上下文环境
-     *
-     * @param context
-     * @throws BeansException
+     * 容器启动时注入上下文
      */
     @Override
-    public void setApplicationContext(ApplicationContext context) throws BeansException {
+    public void setApplicationContext(@Nonnull ApplicationContext context) throws BeansException {
         applicationContext = context;
+        log.info("🔧 SpringContextHolder 已成功接管 ApplicationContext");
     }
 
     /**
-     * @return ApplicationContext
+     * 容器销毁时清理静态引用，防止内存泄漏
      */
+    @Override
+    public void destroy() {
+        log.info("🧹 SpringContextHolder 正在清理 ApplicationContext 引用");
+        applicationContext = null;
+    }
+
+    /**
+     * 内部断言：确保在使用前 applicationContext 已经被注入
+     */
+    private static void assertContextInjected() {
+        Assert.state(applicationContext != null,
+                "ApplicationContext 尚未被注入! 请确认 Spring 容器已正常启动且未发生循环依赖。");
+    }
+
     public static ApplicationContext getApplicationContext() {
+        assertContextInjected();
         return applicationContext;
     }
 
-    /**
-     * 获取对象
-     *
-     * @param name
-     * @return Object 一个以所给名字注册的bean的实例
-     * @throws BeansException
-     */
-    public static Object getBean(String name) throws BeansException {
-        return applicationContext.getBean(name);
+    @SuppressWarnings("unchecked")
+    public static <T> T getBean(String name) {
+        assertContextInjected();
+        return (T) applicationContext.getBean(name);
     }
 
-    /**
-     * 根据类获取bean
-     * @param clazz
-     * @param <T>
-     * @return
-     */
-    public static <T> T getBean(Class<T> clazz) {
-        if (applicationContext == null) {
-            return null;
-        }
-        return applicationContext.getBean(clazz);
+    public static <T> T getBean(Class<T> requiredType) {
+        assertContextInjected();
+        return applicationContext.getBean(requiredType);
     }
 
-    /**
-     * 获取类型为requiredType的对象 如果bean不能被类型转换，相应的异常将会被抛出（BeanNotOfRequiredTypeException）
-     *
-     * @param name bean注册名
-     * @param clazz 返回对象类型
-     * @return Object 返回requiredType类型对象
-     * @throws BeansException
-     */
-    public static <T> T getBean(String name, Class<T> clazz) throws BeansException {
-        return applicationContext.getBean(name, clazz);
+    public static <T> T getBean(String name, Class<T> requiredType) {
+        assertContextInjected();
+        return applicationContext.getBean(name, requiredType);
     }
 
-    /**
-     * 如果BeanFactory包含一个与所给名称匹配的bean定义，则返回true
-     *
-     * @param name
-     * @return boolean
-     */
     public static boolean containsBean(String name) {
+        assertContextInjected();
         return applicationContext.containsBean(name);
     }
 
-    /**
-     * 判断以给定名字注册的bean定义是一个singleton还是一个prototype。
-     * 如果与给定名字相应的bean定义没有被找到，将会抛出一个异常（NoSuchBeanDefinitionException）
-     *
-     * @param name
-     * @return boolean
-     * @throws NoSuchBeanDefinitionException
-     */
-    public static boolean isSingleton(String name) throws NoSuchBeanDefinitionException {
+    public static boolean isSingleton(String name) {
+        assertContextInjected();
         return applicationContext.isSingleton(name);
     }
 
-    /**
-     * @param name
-     * @return Class 注册对象的类型
-     * @throws NoSuchBeanDefinitionException
-     */
-    public static Class getType(String name) throws NoSuchBeanDefinitionException {
+    public static Class<?> getType(String name) {
+        assertContextInjected();
         return applicationContext.getType(name);
     }
 
-    /**
-     * 如果给定的bean名字在bean定义中有别名，则返回这些别名
-     *
-     * @param name
-     * @return
-     * @throws NoSuchBeanDefinitionException
-     */
-    public static String[] getAliases(String name) throws NoSuchBeanDefinitionException {
+    public static String[] getAliases(String name) {
+        assertContextInjected();
         return applicationContext.getAliases(name);
     }
 
     /**
-     * 获取配置数据
-     * @param key
-     * @return
+     * 获取环境配置参数 (如 application.yml 中的参数)
      */
     public static String getEnvProperty(@Nonnull String key) {
+        assertContextInjected();
         return applicationContext.getEnvironment().getProperty(key);
     }
 }

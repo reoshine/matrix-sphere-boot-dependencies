@@ -1,17 +1,16 @@
 package com.roshine.matrixsphere.base.client.login;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  * @author roshine
- * @version 1.0.0
- * @date 2020-10-13 21:13
- * @Description 访问用户对象
+ * @version 2.0.0
+ * 全局微服务访问用户上下文 (与 SSO Account 领域模型对齐)
  */
 @Data
 @Accessors(chain = true)
@@ -20,25 +19,38 @@ public class LoginAccount implements Serializable {
     @Serial
     private static final long serialVersionUID = -6755650601781710954L;
 
-    @Schema(defaultValue = "主键")
-    private Long id;
+    /**
+     * 用户ID (全局唯一标识)
+     */
+    private String id;
 
-    @Schema(defaultValue = "账号")
+    /**
+     * 登录账号 (与 SSO 的 accountNo 对齐)
+     */
     private String accountNo;
 
-    @Schema(defaultValue = "账户名称")
+    /**
+     * 账户名称/真实姓名
+     */
     private String accountName;
 
-    @Schema(defaultValue = "账户密码")
-    private String accountPassword;
+    /**
+     * 所属部门ID
+     */
+    private Long deptId;
 
-    @Schema(defaultValue = "电话号码")
-    private String cellPhone;
+    /**
+     * 电话号码 (与 SSO 对齐)
+     */
+    private String phone;
 
-    @Schema(defaultValue = "身份证号")
-    private String idCardNo;
+    /**
+     * 电子邮箱
+     */
+    private String email;
 
-    @Schema(defaultValue = "账号状态")
-    private Integer accountStatus;
-
+    /**
+     * 该账号拥有的角色或权限标识集合 (RBAC)
+     */
+    private Set<String> authorities;
 }

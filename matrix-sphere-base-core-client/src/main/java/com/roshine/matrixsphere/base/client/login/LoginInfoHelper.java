@@ -2,23 +2,31 @@ package com.roshine.matrixsphere.base.client.login;
 
 /**
  * @author roshine
- * @version 1.0.0
- * @date 2020-11-13 19:01
- * @Description 登录信息
+ * @version 2.0.0
+ * 当前线程登录信息上下文句柄
+ * 警告：在跨线程、异步任务中直接使用会导致 NullPointerException，必须配合上下文透传工具使用！
  */
 public class LoginInfoHelper {
 
-    private static ThreadLocal<LoginInfo> local = new ThreadLocal<>();
+    private static final ThreadLocal<LoginInfo> LOCAL = new ThreadLocal<>();
 
     public static void setUserInfo(LoginInfo loginInfo) {
-        local.set(loginInfo);
+        LOCAL.set(loginInfo);
     }
 
     public static LoginInfo getUserInfo() {
-        return local.get();
+        return LOCAL.get();
+    }
+
+    /**
+     * 快捷获取当前登录用户 ID
+     */
+    public static String getUserId() {
+        LoginInfo info = getUserInfo();
+        return (info != null && info.getAccount() != null) ? info.getAccount().getId() : null;
     }
 
     public static void removeUserInfo() {
-        local.remove();
+        LOCAL.remove();
     }
 }
